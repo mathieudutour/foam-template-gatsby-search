@@ -78,9 +78,18 @@ export const useFlexSearch = (query, searchOptions) => {
       ? titleIndex.search(query, searchOptions)
       : [];
 
+    const uniqIds = new Set();
+
     return rawPathResults
       .concat(rawTitleResults)
       .concat(rawBodyResults)
+      .filter((id) => {
+        if (uniqIds.has(id)) {
+          return false;
+        }
+        uniqIds.add(id);
+        return true;
+      })
       .map((id) => store[id]);
   }, [query, pathIndex, titleIndex, bodyIndex, store]);
 };
